@@ -1,0 +1,21 @@
+.app-container {
+    border: 3px solid black;
+    border-radius: 30px; 
+    width: 30%;
+    margin: 0 auto;
+    padding: 20px 10px;
+    -webkit-box-shadow: 0px 0px 10px -4px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 10px -4px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 10px -4px rgba(0,0,0,0.75);
+}
+
+.btn {
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+input {
+    padding: 0; 
+    margin: 0; 
+}

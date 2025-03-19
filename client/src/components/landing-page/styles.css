@@ -1,0 +1,18 @@
+.home-container {
+    .landing-page-img {
+        width: 100%;
+    }
+
+    .arrow-container {
+        width: 50px;
+        box-sizing: border-box;
+        background: black; 
+        padding: 10px;
+        border-radius: 10px;
+        transition: all .3s ease-in-out; 
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
