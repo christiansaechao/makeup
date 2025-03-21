@@ -1,18 +1,28 @@
 .app-container {
+    height: 95vh;
     border: 3px solid black;
     border-radius: 30px; 
     width: 30%;
     margin: 0 auto;
-    padding: 20px 10px;
+    padding: 10px;
     -webkit-box-shadow: 0px 0px 10px -4px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 10px -4px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 10px -4px rgba(0,0,0,0.75);
+    box-sizing: border-box;
+    background-color: #fff;
 }
 
 .btn {
     &:hover {
         cursor: pointer;
     }
+}
+
+.field {
+    width: 45%;
+    padding: 5px 10px;
+    border: 1px solid gray; 
+    border-radius: 5px;
 }
 
 input {

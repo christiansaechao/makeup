@@ -1,0 +1,9 @@
+.photo-upload-container {
+    background-image: url("../../images/bg_pattern.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+    color: #f1f1f1;
+    border-radius: 20px;
+}

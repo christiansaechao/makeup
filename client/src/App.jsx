@@ -5,38 +5,24 @@ import './App.css';
 import LandingPage from './components/landing-page';
 import Login from './components/login';
 import PhotoUpload from './components/photo-upload';
+import Dashboard from './components/dashboard';
 
 const App = () => {
-    const [backendData, setBackendData] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
-
-    // proxy set up so we don't have to write http://localhost:8181 in package.json
-    const url = "/users/user";
-
-    const getUsers = async () => {
-        try {
-            const { data } = await axios.get(url);
-            if (!data){
-                setErrorMessage("No data found");
-            } else {
-                setBackendData(data); 
-            }
-        } 
-        catch (err) {
-            throw new Error(err);
-        }
+    const [pageStep, setPageStep] = useState(2);
+    const pages = {
+        0: <LandingPage setPageStep={setPageStep} pageStep={pageStep} />,
+        1: <Login setPageStep={setPageStep} pageStep={pageStep} />,
+        2: <PhotoUpload setPageStep={setPageStep} pageStep={pageStep} />,
+        3: <Dashboard />
     };
-
-    useEffect(() => {
-        getUsers();
-    }, []);
 
     const loadingComponent = () => {
         return <div>Loading... {errorMessage}</div>
     }
 
     return (
-        <div className="app-container m-auto">
+        <div className="app-container m-auto" >
             {/* {backendData !== null ? 
             <>
             Welcome: {backendData?.map((user) => {
@@ -44,9 +30,7 @@ const App = () => {
             })}
             </> : loadingComponent()
             } */}
-            <LandingPage />
-            <Login />
-            <PhotoUpload />
+            {pages[pageStep]}
         </div>
     )
 }
