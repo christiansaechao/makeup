@@ -23,13 +23,7 @@ const App = () => {
 
     return (
         <div className="app-container m-auto" >
-            {/* {backendData !== null ? 
-            <>
-            Welcome: {backendData?.map((user) => {
-                return <span key={user.id} className="text-3xl font-bold underline">{user.firstName} {user.lastName}</span>
-            })}
-            </> : loadingComponent()
-            } test */}
+            {!pages[pageStep] && loadingComponent()}
             {pages[pageStep]}
         </div>
     )

@@ -8,6 +8,10 @@ export const useUserStorePersisted = create()(
             lastName: '',
             email: '',
             password: '',
+            img: '',
+            skinTone: '',
+            eyeColor: '',
+            lipColor: '',
             setUser: (user) => set((state) => ({...state, ...user}))
         }),
         { name: 'user-profile' }
@@ -17,8 +21,8 @@ export const useUserStorePersisted = create()(
 export const useImageStorePersisted = create()(
     persist(
         (set, get) => ({
-            face: [],
-            setImage: (image) => set((state) => ({...state, ...image}))
+            imageData: null,
+            setImageData: (image) => set((state) => ({...state, imageData: image}))
         }),
         { name: 'image-profile' }
     ),
