@@ -20,7 +20,6 @@ const Recommendations = ({ eyeShadowsProd, blushesProd, lipSticksProd }) => {
 
     return (
         <div>
-            {console.log(eyeShadows)}
             <div className={'m-2'}>
                 <h1 className={'text-3xl'}>Eye Shadows</h1>
                 {eyeShadows?.map((eyeShadow, index) => <Product key={index} brand={eyeShadow.brand} image_link={eyeShadow.api_featured_image} product_link={eyeShadow.product_link}/>)}
