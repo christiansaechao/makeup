@@ -4,14 +4,17 @@ import { persist } from 'zustand/middleware';
 export const useUserStorePersisted = create()(
     persist(
         (set, get) => ({
-            firtName: '',
+            firstName: '',
             lastName: '',
             email: '',
             password: '',
             img: '',
-            skinTone: '',
-            eyeColor: '',
-            lipColor: '',
+            skinTone: null,
+            eyeColor: null,
+            lipColor: null,
+            lipSticks: null,
+            eyeShadows: null,
+            blushes: null,
             setUser: (user) => set((state) => ({...state, ...user}))
         }),
         { name: 'user-profile' }

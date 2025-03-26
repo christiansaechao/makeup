@@ -6,4 +6,10 @@
     height: 100%;
     color: #f1f1f1;
     border-radius: 20px;
+
+    .img-container {
+        img {
+            max-width: 250px;
+        }
+    }
 }

@@ -1,18 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useImageStorePersisted } from '../../store/userStore';
-import { useUserStorePersisted } from '../../store/userStore';
+import { useImageStorePersisted, useUserStorePersisted } from '../../store/userStore';
+import { useMakeupStore } from '../../store/makeupStore';
+import { 
+	skinTones, 
+	eyeColors, 
+	lipColors, 
+	colorMatch, 
+	getMakeupRecommendations
+} from './colorHelper';
 
 import PlaceHolder from '../../images/placeholder.jpg';
 import './styles.css';
 const apiKey = process.env.REACT_APP_API_KEY;
 
 const PhotoUpload = ({ setPageStep, pageStep }) => {
-    const { setImageData } = useImageStorePersisted();
-	const { setUser } = useUserStorePersisted();
+    const { imageData, setImageData } = useImageStorePersisted();
+	const { setUser, skinTone, eyeColor, lipColor } = useUserStorePersisted();
+	const { lipSticks, eyeShadows, blushes } = useMakeupStore();
+
     const [uploadedImage, setUploadedImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
-
+	const [loading, setLoading] = useState(false);
+	
     const setDefaultImage = (e) => {
         setUploadedImage(e.target.files[0]);
     }
@@ -40,10 +50,11 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 			if (!coordinates) {
 				setErrorMessage("Error with Cloudmersive API: could not get coordinates from image.");
 			}
-
+			localStorage.clear();
             const userColors = extractColors(ctx, coordinates);
 			setImageData(userColors);
 			setUser({img: userImage.src});
+			convertUserColors();
 			setPageStep(pageStep + 1);
         };
     };
@@ -59,6 +70,7 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
         }
 
         try {
+			setLoading(!loading);
             const formData = new FormData();
             formData.append('image', uploadedImage);
             const { data } =  await axios.post("https://api.cloudmersive.com/image/face/locate-with-landmarks", formData, { headers: {"Apikey": apiKey }});
@@ -67,7 +79,8 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 				setErrorMessage("No faces detected. Please try another image.");
 				return null;
 			}
-			
+
+			setLoading(!loading);
             return [['eye', data.Faces[0].RightEye], ['lips', data.Faces[0].LipsOuterOutline], ['skin', data.Faces[0].BottomAndSidesOfFace]];
         } catch(err) {
 			console.error("Error reaching Cloudmersive API:", err);
@@ -97,7 +110,7 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 			const pixelData = ctx.getImageData(startingPoint.X, startingPoint.Y, xDist, yDist).data;
 
 			if (!pixelData) {
-				setErrorMessage('There was an error when trying to get teh pixel data from the image');
+				setErrorMessage('There was an error when trying to get the pixel data from the image');
 				return null;
 			}
 
@@ -108,7 +121,6 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 
 		return extractedColors;
 	};
-	
 
 	/*
 	* Returns [][] of the 5 most common colors in RGBA format and their frequency count
@@ -121,7 +133,6 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 			const g = colors[i + 1];
 			const b = colors[i + 2];
 			const a = colors[i + 3];
-
 			const rgba = `${r},${g},${b},${a}`; 
 
 			colorMap[rgba] = (colorMap[rgba] || 0) + 1
@@ -131,16 +142,38 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 		return sortedColors.slice(0, 5);
 	}
 
-	
+	const convertUserColors = () => {
+		const eyesData = imageData[0].eye;
+		const lipsData = imageData[1].lips; 
+		const skinData = imageData[2].skin;
+
+		const skinTone = colorMatch(skinData, skinTones);
+		const eyeColor = colorMatch(eyesData, eyeColors);
+		const lipColor = colorMatch(lipsData, lipColors);
+
+		setUser({ 
+			skinTone: skinTone,
+			eyeColor: eyeColor,
+			lipColor: lipColor
+		});
+
+		const results = getMakeupRecommendations([skinTone, eyeColor, lipColor], [blushes, eyeShadows, lipSticks]);
+		setUser({ 
+			blushes: results.blush,
+			eyeShadows: results.eyeshadow,
+			lipSticks: results.lipstick
+		});
+	}
+
 	return (
 		<div className="photo-upload-container flex justify-center align-center flex-col gap-2 p-5" >
+			<h1 className="text-center text-3xl mb-2">Photo Upload</h1>
 			<div className="img-container mb-5" >
-				<h1 className="text-center text-3xl mb-2">Photo Upload</h1>
 				<img src={uploadedImage ? URL.createObjectURL(uploadedImage) : PlaceHolder} className="m-auto" alt="Uploaded Preview" />
 			</div>
 			<input type="file" accept=".jpg, .jpeg, .png" className="upload m-auto w-full" onChange={setDefaultImage}placeholder='Upload Image' />
 			<p className="text-center text-base text-red-700">{errorMessage}</p>
-			<div className="btn border-2 border-black rounded-md p-3" onClick={handleImageUpload}>Get Started!</div>
+			<div className="btn border-2 border-black rounded-md p-3" onClick={!loading ? handleImageUpload : null}>{loading ? 'Loading...' : 'Get Started!'}</div>
 		</div>
 	)
 }

@@ -1,38 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { useUserStorePersisted, useImageStorePersisted } from '../../store/userStore';
-import { skinTones, eyeColors, lipColors, colorMatch } from './skinData';
+import React from 'react';
+import { useUserStorePersisted } from '../../store/userStore';
 import Recommendations from './recommendations';
 import './styles.css';
 
 const Dashboard = () => {
-    const { firstName, lastName, setUser, skinTone, eyeColor, lipColor } = useUserStorePersisted();
-    const { imageData } = useImageStorePersisted();
-
-    const findUserColors = () => {
-        const eyesData = imageData[0].eye;
-        const lipsData = imageData[1].lips; 
-        const skinData = imageData[2].skin;
-
-        setUser({ skinTone: colorMatch(skinData, skinTones), eyeColor: colorMatch(eyesData, eyeColors), lipColor: colorMatch(lipsData, lipColors) });
-    }
-
-    useEffect(() => {
-        if (!skinTone || !eyeColor || !lipColor) {
-            findUserColors();
-        }
-    }, []);
+    const { firstName, skinTone, eyeColor, lipColor, img, eyeShadows, blushes, lipSticks } = useUserStorePersisted();
 
     return (
-        <div>
-            <h1>{firstName}, {lastName} Your Complexion Analysis:
-                skin: {skinTone[0]}, eye: {eyeColor[0]}, lip: {lipColor[0]}
-            </h1>
+        <div className={"dashboard-container flex justify-center align-center flex-col gap-5 p-2 overflow-y-auto overflow-hidden"}>
+            <h1 className={'text-2xl text-transform capitalize'}>{firstName} Your Complexion Analysis: </h1>
+            <img src={img} className="m-auto w-1/2" alt="uploaded user" />
+            <ul className={'text-transform capitalize'}>
+                <li>Skin Tone: {skinTone[0]}</li>
+                <li>Eye Color: {eyeColor[0]}</li>
+                <li>Lip Color: {lipColor[0]}</li>
+            </ul>
             <p>
                 Based on your uploaded image, 
                 we recommend these shades that complement your complexion.
             </p>
-            <Recommendations time='day' />
-            <Recommendations time='night' />
+            <Recommendations eyeShadowsProd={eyeShadows} blushesProd={blushes} lipSticksProd={lipSticks}/>
         </div>
     )
 }
