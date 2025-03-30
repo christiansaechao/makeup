@@ -22,7 +22,7 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
     const [uploadedImage, setUploadedImage] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
 	const [loading, setLoading] = useState(false);
-	
+
     const setDefaultImage = (e) => {
         setUploadedImage(e.target.files[0]);
     }
@@ -50,7 +50,7 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 			if (!coordinates) {
 				setErrorMessage("Error with Cloudmersive API: could not get coordinates from image.");
 			}
-			localStorage.clear();
+			
             const userColors = extractColors(ctx, coordinates);
 			setImageData(userColors);
 			setUser({img: userImage.src});
@@ -163,6 +163,8 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 			eyeShadows: results.eyeshadow,
 			lipSticks: results.lipstick
 		});
+
+		alert("working");
 	}
 
 	return (
@@ -171,7 +173,7 @@ const PhotoUpload = ({ setPageStep, pageStep }) => {
 			<div className="img-container mb-5" >
 				<img src={uploadedImage ? URL.createObjectURL(uploadedImage) : PlaceHolder} className="m-auto" alt="Uploaded Preview" />
 			</div>
-			<input type="file" accept=".jpg, .jpeg, .png" className="upload m-auto w-full" onChange={setDefaultImage}placeholder='Upload Image' />
+			<input type="file" accept=".jpg, .jpeg, .png" className="upload m-auto w-full" onChange={setDefaultImage} placeholder='Upload Image' />
 			<p className="text-center text-base text-red-700">{errorMessage}</p>
 			<div className="btn border-2 border-black rounded-md p-3" onClick={!loading ? handleImageUpload : null}>{loading ? 'Loading...' : 'Get Started!'}</div>
 		</div>

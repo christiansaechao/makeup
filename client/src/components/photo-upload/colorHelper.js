@@ -107,11 +107,10 @@ export const lipColors = {
     },
     dark_brown: {
         r: [60, 140], 
-        g: [40, 100], 
+        g: [40, 100],
         b: [30, 90]   
     }
 };
-
 
 /*
 * returns [string, num]

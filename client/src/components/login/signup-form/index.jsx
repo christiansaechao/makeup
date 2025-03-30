@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useUserStorePersisted } from '../../../store/userStore';
-import './styles.css'; 
+import './styles.css';
 
 const SignupForm = ({ setShowLogin, showLogin, setPageStep, pageStep }) => {
     const { setUser } = useUserStorePersisted();
@@ -30,7 +30,7 @@ const SignupForm = ({ setShowLogin, showLogin, setPageStep, pageStep }) => {
             setUser({firstName, lastName, email, password});
             setPageStep(pageStep + 1);
         }
-    }
+    } 
 
     return (
         <div className="signup-container">
